@@ -5,13 +5,20 @@ BASE_PROMPT = """
     URLs must start with http or https. For instance, (/cat) is not a valid URL. \
     In cases like /:value, treat ":value" as a dynamic parameter. For example, in /users/:id, ":id" should be replaced with an actual user ID, resulting in /users/123.\
     To add parameters to a URL, append a query string. Example: https://api.com/resource?key=value \
-    The user’s input may be translated to match the API documentation if necessary. \
-    Extract the URL from the context (do not use these examples). 
+    The user’s input may be translated to match the API documentation if necessary. \ 
 """
+
+API_DOC_PROMPT = """
+    From this HTML file corresponding to the API documentation, extract the relevant information and create a well-structured documentation,\
+    divided into paragraphs. In each paragraph, explain clearly and concisely the different uses of the API.\
+    Additionally, attempt to infer the full URL of the endpoints in case it's not explicitly provided.\
+    """
+
 def user_prompt(msg, api_info):
     return f"""
     {BASE_PROMPT}
 
-    Use this API documentation to extract the correct URL: {api_info}.
-    Retrieve this information using the given API: {msg}
+    Use the provided API documentation in {api_info} to extract the correct URL for retrieving the information requested by the user: {msg}.
+    You may combine different parameters from the endpoints if necessary in order to construct a URL that fulfills the user's request.\
+    Ensure that all required parameters are included, and the url is formatted correctly.
 """

@@ -4,7 +4,7 @@ from src.gemini_client import GeminiClient
 
 from src.chat import Chat
 from src.utils import load_content
-from src.prompts import user_prompt
+from src.prompts import user_prompt, API_DOC_PROMPT
 from src.functions import function_declarations, functions
 
 
@@ -29,7 +29,14 @@ api_url = st.text_input("", placeholder='Enter a url')
 if api_url != st.session_state.api_doc_url:
     chat.reset()
     st.session_state.api_doc_url = api_url
-    st.session_state.api_doc_content = load_content(api_url)
+    content = load_content(api_url)
+    
+    prompt = f"""
+    {API_DOC_PROMPT}
+    {content}
+    """
+    st.session_state.api_doc_content = client.generate_content(prompt)
+    print(st.session_state.api_doc_content)
     
 
 

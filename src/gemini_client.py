@@ -17,6 +17,9 @@ class GeminiClient():
                 if 'err' not in result:
                     return result 
                 
+                if retry and 'err' in result:
+                    return result['result']
+                
                 if not retry:
                     new_msg = f'The result {result['result']} is incorrect, please fix this error: {result['err']}'
                     return self.get_response(new_msg, context, functions, retry=True)
@@ -24,3 +27,7 @@ class GeminiClient():
                 res.append(part.text)
                 
         return ''.join(res)
+
+    def generate_content(self, prompt):
+        response = self.model.generate_content(prompt)
+        return response.text

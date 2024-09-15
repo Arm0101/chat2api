@@ -16,7 +16,7 @@ def call_api(url):
     
     if 'image' in content_type:
         img = Image.open(BytesIO(res.content))
-        st.image(img, caption='Image from API')
+        st.image(img,width=500 ,caption='Image from API')
         return url
     else:
         return res.text
